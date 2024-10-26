@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "Network Request Recorder",
+  "version": "1.0",
+  "description": "Records network requests with headers and body data",
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>",
+    "downloads",
+    "storage"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
+  }
+}
