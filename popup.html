@@ -1,10 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Request Recorder</title>
   <style>
     body {
-      width: 300px;
+      width: 800px;
+      height: 1000px;
       padding: 10px;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+    .tab-container {
+      display: flex;
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+    .tab {
+      padding: 10px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      margin-right: 5px;
+      background-color: #f4f4f4;
+    }
+    .tab.active {
+      background-color: white;
+      font-weight: bold;
+      border-top: 2px solid #888;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+    }
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: block;
     }
     button {
       width: 100%;
@@ -16,22 +50,110 @@
       background-color: #ff4444;
       color: white;
     }
-    #status {
-      margin-top: 10px;
+    #status, #stats {
       font-size: 12px;
       color: #666;
     }
-    #stats {
+    .table-container {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
       margin-top: 10px;
-      font-size: 12px;
-      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+      vertical-align: top;
+      max-width: 200px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    td:hover {
+      overflow-x: auto;
+      white-space: nowrap;
+      text-overflow: clip;
+    }
+    td::-webkit-scrollbar {
+      height: 8px;
+    }
+    td::-webkit-scrollbar-thumb {
+      background-color: #888;
+      border-radius: 4px;
+    }
+    /* Close button styling */
+    #close-button {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      cursor: pointer;
+      background-color: #ff4d4d;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-weight: bold;
+      font-size: 16px;
+      z-index: 10;
+    }
+    #close-button:hover {
+      background-color: #ff1a1a;
     }
   </style>
 </head>
 <body>
-  <button id="toggleBtn">Start Recording</button>
-  <div id="stats"></div>
-  <div id="status"></div>
+  <!-- Close button -->
+  <div id="close-button" title="Close">X</div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-container">
+    <div id="recordTab" class="tab active">Record</div>
+    <div id="replayTab" class="tab">Replay</div>
+  </div>
+
+  <!-- Record Section -->
+  <div id="recordSection" class="section active">
+    <button id="toggleRecordBtn">Start Recording</button>
+    <div id="stats"></div>
+    <div id="status"></div>
+
+    <!-- File Input, Filter Controls, and Table Container -->
+    <div>
+      <input type="file" id="fileInput" accept=".json" style="width: 100%; padding: 5px; margin-top: 10px;">
+      <input type="text" id="filterInput" placeholder="Filter by URL or method" style="width: 100%; padding: 5px; margin-top: 10px;">
+      <button id="applyFilterBtn" style="width: 100%; margin-top: 5px;">Apply Filter</button>
+    </div>
+
+    <div class="table-container">
+      <table id="requestResponseTable">
+        <thead>
+          <tr>
+            <th>Request Details</th>
+            <th>Response Details</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Replay Section -->
+  <div id="replaySection" class="section">
+    <button id="replayBtn">Replay</button>
+    <div id="replayStatus"></div>
+    <div>
+      <input type="file" id="replayFileInput" accept=".json" style="width: 100%; padding: 5px; margin-top: 10px;">
+      <button id="loadReplayFileBtn" style="width: 100%; margin-top: 5px;">Load File for Replay</button>
+    </div>
+  </div>
+
   <script src="popup.js"></script>
 </body>
 </html>
